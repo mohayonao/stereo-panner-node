@@ -1,0 +1,19 @@
+{
+  "name": "stereo-panner-node",
+  "version": "0.1.0",
+  "authors": [
+    "nao yonamine <mohayonao@gmail.com>"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "keywords": [
+    "webaudioapi",
+    "stereopanner"
+  ],
+  "license": "MIT",
+  "main": "lib/stereo-panner-node.js"
+}

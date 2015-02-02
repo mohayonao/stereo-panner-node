@@ -1,0 +1,28 @@
+{
+  "name": "stereo-panner-node",
+  "version": "0.1.0",
+  "author": "nao yonamine <mohayonao@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/mohayonao/stereo-panner-node/issues"
+  },
+  "devDependencies": {
+    "jshint": "^2.6.0",
+    "jshint-stylish": "^1.0.0",
+    "mocha": "^2.1.0",
+    "web-audio-test-api": "^0.2.0"
+  },
+  "keywords": [
+    "webaudioapi",
+    "stereopanner"
+  ],
+  "main": "lib/stereo-panner-node.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mohayonao/stereo-panner-node.git"
+  },
+  "scripts": {
+    "lint": "jshint --reporter node_modules/jshint-stylish/stylish.js lib test",
+    "test": "mocha --require web-audio-test-api",
+    "travis": "npm run lint && npm run test"
+  }
+}
