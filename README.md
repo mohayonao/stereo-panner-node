@@ -26,10 +26,10 @@ downloads:
 ### StereoPannerNode
   - `constructor(audioContext: AudioContext)`
 
-#### Attributes
+#### Instance Attributes
   - `pan: AudioParam` _readonly_
 
-#### Methods
+#### Instance Methods
   - `connect(destination: AudioNode | AudioParam)`
   - `disconnect()`
 
@@ -54,16 +54,16 @@ panner.connect(audioContext.destination);
 ```
 +-----------------+  +-----------------------+
 | GainNode(inlet) |  | BufferSourceNode(dc1) |
-| gain: 1         |  | buffer: [ 1, 1]       |
+| gain: 1         |  | buffer: [ 1, 1 ]      |
 +-----------------+  | loop: true            |
   |                  +-----------------------+
-  |                     |
-  |                   +---------------+
-  |                   | GainNode(pan) |
-  |                   | gain: 0       |
-  |                   +---------------+
-  |                     |
-  |     +-------------------------+
+  |                    |
+  |                  +---------------+
+  |                  | GainNode(pan) |
+  |                  | gain: 0       |
+  |                  +---------------+
+  |                    |
+  |     +--------------+----------+
   |     |                         |
   |   +---------------------+    +---------------------+
   |   | WaveShaperNode(wsL) |    | WaveShaperNode(wsR) |
@@ -76,10 +76,10 @@ panner.connect(audioContext.destination);
       | GainNode(outL) |  |      | GainNode(outR) |  |
       | gain: 0      <----+      | gain: 0      <----+
       +----------------+         +----------------+
-        |                     |
-+-------------------------------------+
-| ChannelMergerNode (outlet)          |
-+-------------------------------------+
+        |                          |
++------------------------------------------+
+| ChannelMergerNode (outlet)               |
++------------------------------------------+
 ```
 
 ## License
