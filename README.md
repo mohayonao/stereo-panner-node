@@ -20,7 +20,7 @@ bower install stereo-panner-node
 
 downloads:
 
-- [stereo-panner-node.js](https://raw.githubusercontent.com/mohayonao/stereo-panner-node/master/stereo-panner-node)
+- [stereo-panner-node.js](https://raw.githubusercontent.com/mohayonao/stereo-panner-node/master/lib/stereo-panner-node.js)
 
 ## API
 ### StereoPannerNode
@@ -30,24 +30,26 @@ downloads:
   - `pan: AudioParam` _readonly_
 
 #### Instance Methods
-  - `connect(destination: AudioNode | AudioParam)`
-  - `disconnect()`
+  - `connect(destination: AudioNode | AudioParam) : void`
+  - `disconnect() : void`
 
 ## Example
 
 ```javascript
 var audioContext = new AudioContext();
+var audioElement = document.getElementById("audioElement");
 
-var media = audioContext.createMediaElementSource(audioElement);
-var position = audioContext.createOscillator();
-var panner = new StereoPannerNode(audioContext);
+var mediaSource = audioContext.createMediaElementSource(audioElement);
+var autoPanRate = audioContext.createOscillator();
+var stereoPanner = new StereoPannerNode(audioContext);
 
-position.frequency.value = 0.05;
+autoPanRate.frequency.value = 0.05;
+autoPanRate.start(audioContext.currentTime);
 
-media.connect(panner);
-position.connect(panner.pan);
+mediaSource.connect(stereoPanner);
+autoPanRate.connect(stereoPanner.pan);
 
-panner.connect(audioContext.destination);
+stereoPanner.connect(audioContext.destination);
 ```
 
 ## AudioGraph
@@ -63,8 +65,8 @@ panner.connect(audioContext.destination);
   |                  | gain: 0       |
   |                  +---------------+
   |                    |
-  |     +--------------+----------+
-  |     |                         |
+  |     +--------------+-----------+
+  |     |                          |
   |   +---------------------+    +---------------------+
   |   | WaveShaperNode(wsL) |    | WaveShaperNode(wsR) |
   |   | curve: curveL       |    | curve: curveR       |
