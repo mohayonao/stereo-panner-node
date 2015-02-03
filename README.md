@@ -4,6 +4,10 @@
 [![Bower](https://img.shields.io/bower/v/stereo-panner-node.svg?style=flat-square)](https://github.com/mohayonao/stereo-panner-node)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](http://mohayonao.mit-license.org/)
 
+> StereoPannerNode for legacy Web Audio API
+
+http://webaudio.github.io/web-audio-api/#the-stereopannernode-interface
+
 ## Installation
 
 npm:
@@ -80,7 +84,7 @@ stereoPanner.connect(audioContext.destination);
       +----------------+         +----------------+
         |                          |
 +------------------------------------------+
-| ChannelMergerNode (outlet)               |
+| ChannelMergerNode(outlet)                |
 +------------------------------------------+
 ```
 
