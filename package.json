@@ -1,6 +1,7 @@
 {
   "name": "stereo-panner-node",
-  "version": "0.1.0",
+  "description": "StereoPannerNode for legacy Web Audio API",
+  "version": "0.1.1",
   "author": "nao yonamine <mohayonao@gmail.com>",
   "bugs": {
     "url": "https://github.com/mohayonao/stereo-panner-node/issues"
