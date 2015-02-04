@@ -24,7 +24,8 @@ bower install stereo-panner-node
 
 downloads:
 
-- [stereo-panner-node.js](https://raw.githubusercontent.com/mohayonao/stereo-panner-node/master/lib/stereo-panner-node.js)
+- [stereo-panner-node.js](https://raw.githubusercontent.com/mohayonao/stereo-panner-node/master/build/stereo-panner-node.js)
+- [stereo-panner-node.min.js](https://raw.githubusercontent.com/mohayonao/stereo-panner-node/master/build/stereo-panner-node.min.js)
 
 ## API
 ### StereoPannerNode
@@ -41,51 +42,51 @@ downloads:
 
 ```javascript
 var audioContext = new AudioContext();
-var audioElement = document.getElementById("audioElement");
+var osc = audioContext.createOscillator();
+var lfo = audioContext.createOscillator();
+var pan = new StereoPannerNode(audioContext);
 
-var mediaSource = audioContext.createMediaElementSource(audioElement);
-var autoPanRate = audioContext.createOscillator();
-var stereoPanner = new StereoPannerNode(audioContext);
+osc.start(audioContext.currentTime);
 
-autoPanRate.frequency.value = 0.05;
-autoPanRate.start(audioContext.currentTime);
+lfo.frequency.value = 0.05;
+lfo.start(audioContext.currentTime);
 
-mediaSource.connect(stereoPanner);
-autoPanRate.connect(stereoPanner.pan);
+osc.connect(pan);
+lfo.connect(pan.pan);
 
-stereoPanner.connect(audioContext.destination);
+pan.connect(audioContext.destination);
 ```
 
 ## AudioGraph
 ```
-+-----------------+  +-----------------------+
-| GainNode(inlet) |  | BufferSourceNode(dc1) |
-| gain: 1         |  | buffer: [ 1, 1 ]      |
-+-----------------+  | loop: true            |
-  |                  +-----------------------+
-  |                    |
-  |                  +---------------+
-  |                  | GainNode(pan) |
-  |                  | gain: 0       |
-  |                  +---------------+
-  |                    |
-  |     +--------------+-----------+
-  |     |                          |
-  |   +---------------------+    +---------------------+
-  |   | WaveShaperNode(wsL) |    | WaveShaperNode(wsR) |
-  |   | curve: curveL       |    | curve: curveR       |
-  |   +---------------------+    +---------------------+
-  |                       |                          |
-  +-----+-----------------|--------+                 |
-        |                 |        |                 |
-      +----------------+  |      +----------------+  |
-      | GainNode(outL) |  |      | GainNode(outR) |  |
-      | gain: 0      <----+      | gain: 0      <----+
-      +----------------+         +----------------+
-        |                          |
-+------------------------------------------+
-| ChannelMergerNode(outlet)                |
-+------------------------------------------+
++-------------------------------+  +-----------------------+
+| ChannelSplitter(inlet)        |  | BufferSourceNode(dc1) |
++-------------------------------+  | buffer: [ 1, 1 ]      |
+  |                           |    | loop: true            |
+  |                           |    +-----------------------+
+  |                           |                |
+  |                           |  +---------------+
+  |                           |  | GainNode(pan) |
+  |                           |  | gain: 0       |
+  |                           |  +---------------+
+  |                           |    |
+  |    +----------------------|----+
+  |    |                      |    |
+  |  +---------------------+  |  +---------------------+
+  |  | WaveShaperNode(wsL) |  |  | WaveShaperNode(wsR) |
+  |  | curve: curveL       |  |  | curve: curveR       |
+  |  +---------------------+  |  +---------------------+
+  |                 |         |                 |
+  |                 |         |                 |
+  |                 |         |                 |
++----------------+  |       +----------------+  |
+| GainNode(outL) |  |       | GainNode(outR) |  |
+| gain: 0      <----+       | gain: 0      <----+
++----------------+          +----------------+
+  |                           |
++-------------------------------+
+| ChannelMergerNode(outlet)     |
++-------------------------------+
 ```
 
 ## License

@@ -93,11 +93,7 @@ describe("StereoPannerNode", function() {
                 },
                 inputs: [
                   {
-                    name: "GainNode",
-                    gain: {
-                      value: 1,
-                      inputs: []
-                    },
+                    name: "ChannelSplitterNode",
                     inputs: [
                       {
                         name: "OscillatorNode",
@@ -158,11 +154,7 @@ describe("StereoPannerNode", function() {
                 },
                 inputs: [
                   {
-                    name: "GainNode",
-                    gain: {
-                      value: 1,
-                      inputs: []
-                    },
+                    name: "ChannelSplitterNode",
                     inputs: [
                       {
                         name: "OscillatorNode",
