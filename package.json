@@ -7,9 +7,11 @@
     "url": "https://github.com/mohayonao/stereo-panner-node/issues"
   },
   "devDependencies": {
+    "browserify": "^8.1.3",
     "jshint": "^2.6.0",
     "jshint-stylish": "^1.0.0",
     "mocha": "^2.1.0",
+    "uglify-js": "^2.4.16",
     "web-audio-test-api": "^0.2.0"
   },
   "keywords": [
@@ -21,7 +23,9 @@
     "type": "git",
     "url": "https://github.com/mohayonao/stereo-panner-node.git"
   },
-  "scripts": {
+  "scripts": {"build": "npm run build-browser && npm run build-minify",
+    "build-browser": "browserify lib/stereo-panner-node.js --standalone StereoPannerNode -o build/stereo-panner-node.js",
+    "build-minify": "uglifyjs build/stereo-panner-node.js -o build/stereo-panner-node.min.js",
     "lint": "jshint --reporter node_modules/jshint-stylish/stylish.js lib test",
     "test": "mocha --require web-audio-test-api",
     "travis": "npm run lint && npm run test"
