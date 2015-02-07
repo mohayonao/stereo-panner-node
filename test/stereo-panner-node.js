@@ -1,48 +1,35 @@
 "use strict";
 
-var assert = require("assert");
-var StereoPannerNode = require("../");
+var assert = require("power-assert");
+var StereoPannerNode = require("../lib/stereo-panner-node");
 
 describe("StereoPannerNode", function() {
+  var audioContext;
+
+  beforeEach(function() {
+    audioContext = new global.AudioContext();
+  });
+
   describe("constructor", function() {
     it("(audioContext: global.AudioContext)", function() {
-      var audioContext = new global.AudioContext();
       var node = new StereoPannerNode(audioContext);
 
       assert(node instanceof global.AudioNode);
     });
   });
-  describe("pan", function() {
+  describe("#pan", function() {
     it("get: AudioParam", function() {
-      var audioContext = new global.AudioContext();
       var node = new StereoPannerNode(audioContext);
 
       assert(node.pan instanceof global.AudioParam);
     });
   });
-  describe("connect", function() {
-    it("(destination: AudioNode|AudioParam): void", function() {
-      var audioContext = new global.AudioContext();
+  describe("#connect", function() {
+    it("(destination: AudioNode): void", function() {
       var node = new StereoPannerNode(audioContext);
+      var sine = audioContext.createOscillator();
 
-      assert(typeof node.connect === "function");
-    });
-  });
-  describe("disconnect", function() {
-    it("(): void", function() {
-      var audioContext = new global.AudioContext();
-      var node = new StereoPannerNode(audioContext);
-
-      assert(typeof node.disconnect === "function");
-    });
-  });
-  describe("works", function() {
-    it("connect", function() {
-      var audioContext = new global.AudioContext();
-      var osc = audioContext.createOscillator();
-      var node = new StereoPannerNode(audioContext);
-
-      osc.connect(node);
+      sine.connect(node);
       node.connect(audioContext.destination);
 
       assert.deepEqual(audioContext.toJSON(), {
@@ -178,12 +165,13 @@ describe("StereoPannerNode", function() {
         ]
       });
     });
-    it("disconnect", function() {
-      var audioContext = new global.AudioContext();
-      var osc = audioContext.createOscillator();
+  });
+  describe("disconnect", function() {
+    it("(): void", function() {
       var node = new StereoPannerNode(audioContext);
+      var sine = audioContext.createOscillator();
 
-      osc.connect(node);
+      sine.connect(node);
       node.connect(audioContext.destination);
       node.disconnect();
 
