@@ -5,7 +5,7 @@
   "authors": [
     "nao yonamine <mohayonao@gmail.com>"
   ],
-  "homepage": "http://mohayonao.github.io/stereo-analyser-node/",
+  "homepage": "http://mohayonao.github.io/stereo-panner-node/",
   "ignore": [
     "**/.*",
     "package.json",
@@ -20,6 +20,6 @@
   "main": "build/stereo-panner-node.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mohayonao/stereo-analyser-node.git"
+    "url": "git://github.com/mohayonao/stereo-panner-node.git"
   }
 }
