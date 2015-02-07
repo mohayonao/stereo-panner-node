@@ -1,9 +1,9 @@
 "use strict";
 
 var assert = require("power-assert");
-var StereoPannerNode = require("../lib/stereo-panner-node");
+var StereoPannerImpl = require("../lib/stereo-panner-impl");
 
-describe("StereoPannerNode", function() {
+describe("StereoPannerImpl", function() {
   var audioContext;
 
   beforeEach(function() {
@@ -11,26 +11,82 @@ describe("StereoPannerNode", function() {
   });
 
   describe("constructor", function() {
-    it("(audioContext: global.AudioContext)", function() {
-      var node = new StereoPannerNode(audioContext);
+    it("(audioContext: AudioContext)", function() {
+      var impl = new StereoPannerImpl(audioContext);
 
-      assert(node instanceof global.AudioNode);
-    });
-  });
-  describe("#pan", function() {
-    it("get: AudioParam", function() {
-      var node = new StereoPannerNode(audioContext);
+      assert(impl instanceof StereoPannerImpl);
+      assert(impl.inlet instanceof global.ChannelSplitterNode);
+      assert(impl.outlet instanceof global.ChannelMergerNode);
+      assert(impl.pan instanceof global.AudioParam);
 
-      assert(node.pan instanceof global.AudioParam);
+      assert.deepEqual(impl.outlet.toJSON(), {
+        name: "ChannelMergerNode",
+        inputs: [
+          {
+            name: "GainNode",
+            gain: {
+              value: 0,
+              inputs: [
+                {
+                  name: "WaveShaperNode",
+                  oversample: "none",
+                  inputs: [
+                    {
+                      name: "GainNode",
+                      gain: {
+                        value: 0,
+                        inputs: []
+                      },
+                      inputs: []
+                    }
+                  ]
+                }
+              ]
+            },
+            inputs: [
+              {
+                name: "ChannelSplitterNode",
+                inputs: []
+              }
+            ]
+          },
+          {
+            name: "GainNode",
+            gain: {
+              value: 0,
+              inputs: [
+                {
+                  name: "WaveShaperNode",
+                  oversample: "none",
+                  inputs: [
+                    {
+                      name: "GainNode",
+                      gain: {
+                        value: 0,
+                        inputs: []
+                      },
+                      inputs: []
+                    }
+                  ]
+                }
+              ]
+            },
+            inputs: [
+              {
+                name: "ChannelSplitterNode",
+                inputs: []
+              }
+            ]
+          }
+        ]
+      });
     });
   });
   describe("#connect", function() {
     it("(destination: AudioNode): void", function() {
-      var node = new StereoPannerNode(audioContext);
-      var sine = audioContext.createOscillator();
+      var impl = new StereoPannerImpl(audioContext);
 
-      sine.connect(node);
-      node.connect(audioContext.destination);
+      impl.connect(audioContext.destination);
 
       assert.deepEqual(audioContext.toJSON(), {
         name: "AudioDestinationNode",
@@ -81,21 +137,7 @@ describe("StereoPannerNode", function() {
                 inputs: [
                   {
                     name: "ChannelSplitterNode",
-                    inputs: [
-                      {
-                        name: "OscillatorNode",
-                        type: "sine",
-                        frequency: {
-                          value: 440,
-                          inputs: []
-                        },
-                        detune: {
-                          value: 0,
-                          inputs: []
-                        },
-                        inputs: []
-                      }
-                    ]
+                    inputs: []
                   }
                 ]
               },
@@ -142,21 +184,7 @@ describe("StereoPannerNode", function() {
                 inputs: [
                   {
                     name: "ChannelSplitterNode",
-                    inputs: [
-                      {
-                        name: "OscillatorNode",
-                        type: "sine",
-                        frequency: {
-                          value: 440,
-                          inputs: []
-                        },
-                        detune: {
-                          value: 0,
-                          inputs: []
-                        },
-                        inputs: []
-                      }
-                    ]
+                    inputs: []
                   }
                 ]
               }
@@ -166,14 +194,12 @@ describe("StereoPannerNode", function() {
       });
     });
   });
-  describe("disconnect", function() {
+  describe("#disconnect", function() {
     it("(): void", function() {
-      var node = new StereoPannerNode(audioContext);
-      var sine = audioContext.createOscillator();
+      var impl = new StereoPannerImpl(audioContext);
 
-      sine.connect(node);
-      node.connect(audioContext.destination);
-      node.disconnect();
+      impl.connect(audioContext.destination);
+      impl.disconnect();
 
       assert.deepEqual(audioContext.toJSON(), {
         name: "AudioDestinationNode",

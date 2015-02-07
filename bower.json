@@ -1,14 +1,15 @@
 {
   "name": "stereo-panner-node",
   "description": "StereoPannerNode for legacy Web Audio API",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "authors": [
     "nao yonamine <mohayonao@gmail.com>"
   ],
+  "homepage": "http://mohayonao.github.io/stereo-analyser-node/",
   "ignore": [
     "**/.*",
-    "node_modules",
-    "bower_components",
+    "package.json",
+    "lib",
     "test"
   ],
   "keywords": [
@@ -16,5 +17,9 @@
     "stereopanner"
   ],
   "license": "MIT",
-  "main": "lib/stereo-panner-node.js"
+  "main": "build/stereo-panner-node.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mohayonao/stereo-analyser-node.git"
+  }
 }
