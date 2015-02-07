@@ -1,7 +1,7 @@
 # StereoPannerNode
 [![Build Status](http://img.shields.io/travis/mohayonao/stereo-panner-node.svg?style=flat-square)](https://travis-ci.org/mohayonao/stereo-panner-node)
 [![NPM Version](http://img.shields.io/npm/v/stereo-panner-node.svg?style=flat-square)](https://www.npmjs.org/package/node-pico)
-[![Bower](https://img.shields.io/bower/v/stereo-panner-node.svg?style=flat-square)](https://github.com/mohayonao/stereo-panner-node)
+[![Bower](http://img.shields.io/bower/v/stereo-panner-node.svg?style=flat-square)](http://bower.io/search/?q=stereo-panner-node)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](http://mohayonao.mit-license.org/)
 
 > StereoPannerNode for legacy Web Audio API
@@ -35,27 +35,11 @@ downloads:
   - `pan: AudioParam` _readonly_
 
 #### Instance Methods
-  - `connect(destination: AudioNode | AudioParam) : void`
-  - `disconnect() : void`
+  - `connect(destination: AudioNode|AudioParam): void`
+  - `disconnect(): void`
 
 ## Example
-
-```javascript
-var audioContext = new AudioContext();
-var osc = audioContext.createOscillator();
-var lfo = audioContext.createOscillator();
-var pan = new StereoPannerNode(audioContext);
-
-osc.start(audioContext.currentTime);
-
-lfo.frequency.value = 0.05;
-lfo.start(audioContext.currentTime);
-
-osc.connect(pan);
-lfo.connect(pan.pan);
-
-pan.connect(audioContext.destination);
-```
+http://mohayonao.github.io/stereo-panner-node/
 
 ## AudioGraph
 ```
