@@ -1,6 +1,6 @@
 # StereoPannerNode
 [![Build Status](http://img.shields.io/travis/mohayonao/stereo-panner-node.svg?style=flat-square)](https://travis-ci.org/mohayonao/stereo-panner-node)
-[![NPM Version](http://img.shields.io/npm/v/stereo-panner-node.svg?style=flat-square)](https://www.npmjs.org/package/node-pico)
+[![NPM Version](http://img.shields.io/npm/v/stereo-panner-node.svg?style=flat-square)](https://www.npmjs.org/package/stereo-panner-node)
 [![Bower](http://img.shields.io/bower/v/stereo-panner-node.svg?style=flat-square)](http://bower.io/search/?q=stereo-panner-node)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](http://mohayonao.mit-license.org/)
 
