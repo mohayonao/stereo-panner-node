@@ -1,12 +1,12 @@
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var n;"undefined"!=typeof window?n=window:"undefined"!=typeof global?n=global:"undefined"!=typeof self&&(n=self),n.StereoPannerNode=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
-
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.StereoPannerNode = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var WS_CURVE_SIZE = 4096;
 var curveL = new Float32Array(WS_CURVE_SIZE);
 var curveR = new Float32Array(WS_CURVE_SIZE);
 
 (function() {
-  for (var i = 0; i < WS_CURVE_SIZE; i++) {
+  var i;
+
+  for (i = 0; i < WS_CURVE_SIZE; i++) {
     curveL[i] = Math.cos((i / WS_CURVE_SIZE) * Math.PI * 0.5);
     curveR[i] = Math.sin((i / WS_CURVE_SIZE) * Math.PI * 0.5);
   }
@@ -19,8 +19,6 @@ module.exports = {
 
 },{}],2:[function(require,module,exports){
 (function (global){
-"use strict";
-
 var curve = require("./curve");
 
 /**
@@ -89,6 +87,7 @@ function StereoPannerImpl(audioContext) {
 
 StereoPannerImpl.prototype.connect = function(destination) {
   var audioContext = this.audioContext;
+
   if (!this._isConnected) {
     this._isConnected = true;
     this._dc1buffer = audioContext.createBuffer(1, 2, audioContext.sampleRate);
@@ -100,11 +99,13 @@ StereoPannerImpl.prototype.connect = function(destination) {
     this._dc1.start(audioContext.currentTime);
     this._dc1.connect(this._pan);
   }
+
   global.AudioNode.prototype.connect.call(this.outlet, destination);
 };
 
 StereoPannerImpl.prototype.disconnect = function() {
   var audioContext = this.audioContext;
+
   if (this._isConnected) {
     this._isConnected = false;
     this._dc1.stop(audioContext.currentTime);
@@ -112,6 +113,7 @@ StereoPannerImpl.prototype.disconnect = function() {
     this._dc1 = null;
     this._dc1buffer = null;
   }
+
   global.AudioNode.prototype.disconnect.call(this.outlet);
 };
 
@@ -119,9 +121,9 @@ module.exports = StereoPannerImpl;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./curve":1}],3:[function(require,module,exports){
-"use strict";
-
+(function (global){
 var StereoPannerImpl = require("./stereo-panner-impl");
+var AudioContext = global.AudioContext || global.webkitAudioContext;
 
 function StereoPanner(audioContext) {
   var impl = new StereoPannerImpl(audioContext);
@@ -129,24 +131,34 @@ function StereoPanner(audioContext) {
   Object.defineProperties(impl.inlet, {
     pan: {
       value: impl.pan,
-      enumerable: true
+      enumerable: true,
     },
     connect: {
       value: function(node) {
         return impl.connect(node);
-      }
+      },
     },
     disconnect: {
       value: function() {
         return impl.disconnect();
-      }
-    }
+      },
+    },
   });
 
   return impl.inlet;
 }
 
+StereoPanner.polyfill = function() {
+  if (!AudioContext || AudioContext.prototype.hasOwnProperty("createStereoPanner")) {
+    return;
+  }
+  AudioContext.prototype.createStereoPanner = function() {
+    return new StereoPanner(this);
+  };
+};
+
 module.exports = StereoPanner;
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./stereo-panner-impl":2}]},{},[3])(3)
 });
