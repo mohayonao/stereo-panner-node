@@ -1,5 +1,3 @@
-"use strict";
-
 var assert = require("power-assert");
 var StereoPannerNode = require("../lib/stereo-panner-node");
 
@@ -38,131 +36,135 @@ describe("StereoPannerNode", function() {
           {
             name: "ChannelMergerNode",
             inputs: [
-              {
-                name: "GainNode",
-                gain: {
-                  value: 0,
-                  inputs: [
-                    {
-                      name: "WaveShaperNode",
-                      oversample: "none",
-                      inputs: [
-                        {
-                          name: "GainNode",
-                          gain: {
-                            value: 0,
-                            inputs: []
-                          },
-                          inputs: [
-                            {
-                              name: "AudioBufferSourceNode",
-                              buffer: {
-                                name: "AudioBuffer",
-                                sampleRate: 44100,
-                                length: 2,
-                                duration: 2 / 44100,
-                                numberOfChannels: 1
-                              },
-                              playbackRate: {
-                                value: 1,
-                                inputs: []
-                              },
-                              loop: true,
-                              loopStart: 0,
-                              loopEnd: 0,
-                              inputs: []
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                inputs: [
-                  {
-                    name: "ChannelSplitterNode",
+              [
+                {
+                  name: "GainNode",
+                  gain: {
+                    value: 0,
                     inputs: [
                       {
-                        name: "OscillatorNode",
-                        type: "sine",
-                        frequency: {
-                          value: 440,
-                          inputs: []
-                        },
-                        detune: {
-                          value: 0,
-                          inputs: []
-                        },
-                        inputs: []
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                name: "GainNode",
-                gain: {
-                  value: 0,
+                        name: "WaveShaperNode",
+                        oversample: "none",
+                        inputs: [
+                          {
+                            name: "GainNode",
+                            gain: {
+                              value: 0,
+                              inputs: [],
+                            },
+                            inputs: [
+                              {
+                                name: "AudioBufferSourceNode",
+                                buffer: {
+                                  name: "AudioBuffer",
+                                  sampleRate: 44100,
+                                  length: 2,
+                                  duration: 2 / 44100,
+                                  numberOfChannels: 1,
+                                },
+                                playbackRate: {
+                                  value: 1,
+                                  inputs: [],
+                                },
+                                loop: true,
+                                loopStart: 0,
+                                loopEnd: 0,
+                                inputs: [],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
                   inputs: [
                     {
-                      name: "WaveShaperNode",
-                      oversample: "none",
+                      name: "ChannelSplitterNode",
                       inputs: [
                         {
-                          name: "GainNode",
-                          gain: {
-                            value: 0,
-                            inputs: []
+                          name: "OscillatorNode",
+                          type: "sine",
+                          frequency: {
+                            value: 440,
+                            inputs: [],
                           },
-                          inputs: [
-                            {
-                              name: "AudioBufferSourceNode",
-                              buffer: {
-                                name: "AudioBuffer",
-                                sampleRate: 44100,
-                                length: 2,
-                                duration: 2 / 44100,
-                                numberOfChannels: 1
-                              },
-                              playbackRate: {
-                                value: 1,
-                                inputs: []
-                              },
-                              loop: true,
-                              loopStart: 0,
-                              loopEnd: 0,
-                              inputs: []
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                          detune: {
+                            value: 0,
+                            inputs: [],
+                          },
+                          inputs: [],
+                        },
+                      ],
+                    },
+                  ],
                 },
-                inputs: [
-                  {
-                    name: "ChannelSplitterNode",
+              ],
+              [
+                {
+                  name: "GainNode",
+                  gain: {
+                    value: 0,
                     inputs: [
                       {
-                        name: "OscillatorNode",
-                        type: "sine",
-                        frequency: {
-                          value: 440,
-                          inputs: []
+                        name: "WaveShaperNode",
+                        oversample: "none",
+                        inputs: [
+                          {
+                            name: "GainNode",
+                            gain: {
+                              value: 0,
+                              inputs: [],
+                            },
+                            inputs: [
+                              {
+                                name: "AudioBufferSourceNode",
+                                buffer: {
+                                  name: "AudioBuffer",
+                                  sampleRate: 44100,
+                                  length: 2,
+                                  duration: 2 / 44100,
+                                  numberOfChannels: 1,
+                                },
+                                playbackRate: {
+                                  value: 1,
+                                  inputs: [],
+                                },
+                                loop: true,
+                                loopStart: 0,
+                                loopEnd: 0,
+                                inputs: [],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  inputs: [
+                    {
+                      name: "ChannelSplitterNode",
+                      inputs: [
+                        {
+                          name: "OscillatorNode",
+                          type: "sine",
+                          frequency: {
+                            value: 440,
+                            inputs: [],
+                          },
+                          detune: {
+                            value: 0,
+                            inputs: [],
+                          },
+                          inputs: [],
                         },
-                        detune: {
-                          value: 0,
-                          inputs: []
-                        },
-                        inputs: []
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
       });
     });
   });
@@ -177,7 +179,7 @@ describe("StereoPannerNode", function() {
 
       assert.deepEqual(audioContext.toJSON(), {
         name: "AudioDestinationNode",
-        inputs: []
+        inputs: [],
       });
     });
   });
