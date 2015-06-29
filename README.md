@@ -31,6 +31,10 @@ downloads:
 ### StereoPannerNode
   - `constructor(audioContext: AudioContext)`
 
+#### Class Methods
+  - `polyfill(): void`
+    - install `createStereoPanner()` method to AudioContext.prototype if needed.
+
 #### Instance Attributes
   - `pan: AudioParam` _readonly_
 
