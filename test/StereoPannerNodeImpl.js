@@ -1,7 +1,7 @@
 var assert = require("assert");
-var StereoPannerImpl = require("../lib/stereo-panner-impl");
+var StereoPannerNodeImpl = require("../lib/StereoPannerNodeImpl");
 
-describe("StereoPannerImpl", function() {
+describe("StereoPannerNodeImpl", function() {
   var audioContext;
 
   beforeEach(function() {
@@ -10,9 +10,9 @@ describe("StereoPannerImpl", function() {
 
   describe("constructor", function() {
     it("(audioContext: AudioContext)", function() {
-      var impl = new StereoPannerImpl(audioContext);
+      var impl = new StereoPannerNodeImpl(audioContext);
 
-      assert(impl instanceof StereoPannerImpl);
+      assert(impl instanceof StereoPannerNodeImpl);
       assert(impl.inlet instanceof global.ChannelSplitterNode);
       assert(impl.outlet instanceof global.ChannelMergerNode);
       assert(impl.pan instanceof global.AudioParam);
@@ -86,7 +86,7 @@ describe("StereoPannerImpl", function() {
   });
   describe("#connect", function() {
     it("(destination: AudioNode): void", function() {
-      var impl = new StereoPannerImpl(audioContext);
+      var impl = new StereoPannerNodeImpl(audioContext);
 
       impl.connect(audioContext.destination);
 
@@ -202,7 +202,7 @@ describe("StereoPannerImpl", function() {
   });
   describe("#disconnect", function() {
     it("(): void", function() {
-      var impl = new StereoPannerImpl(audioContext);
+      var impl = new StereoPannerNodeImpl(audioContext);
 
       impl.connect(audioContext.destination);
       impl.disconnect();

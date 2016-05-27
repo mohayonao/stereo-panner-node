@@ -1,5 +1,5 @@
 var assert = require("assert");
-var StereoPannerNode = require("../lib/stereo-panner-node");
+var StereoPannerNode = require("../lib/StereoPannerNode");
 
 describe("StereoPannerNode", function() {
   var audioContext;
