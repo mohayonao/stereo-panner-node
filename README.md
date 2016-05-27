@@ -1,7 +1,6 @@
 # StereoPannerNode
 [![Build Status](http://img.shields.io/travis/mohayonao/stereo-panner-node.svg?style=flat-square)](https://travis-ci.org/mohayonao/stereo-panner-node)
 [![NPM Version](http://img.shields.io/npm/v/stereo-panner-node.svg?style=flat-square)](https://www.npmjs.org/package/stereo-panner-node)
-[![Bower](http://img.shields.io/bower/v/stereo-panner-node.svg?style=flat-square)](http://bower.io/search/?q=stereo-panner-node)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](http://mohayonao.mit-license.org/)
 
 > StereoPannerNode for legacy Web Audio API
@@ -10,16 +9,8 @@ http://webaudio.github.io/web-audio-api/#the-stereopannernode-interface
 
 ## Installation
 
-npm:
-
 ```
 npm install stereo-panner-node
-```
-
-bower:
-
-```
-bower install stereo-panner-node
 ```
 
 downloads:
@@ -33,49 +24,43 @@ downloads:
 
 #### Class Methods
   - `polyfill(): void`
-    - install `createStereoPanner()` method to AudioContext.prototype if needed.
+    - install `createStereoPanner()` method to `AudioContext.prototype` if needed.
+  - `install(): void`
+    - install `createStereoPanner()` method to `AudioContext.prototype` force
 
 #### Instance Attributes
   - `pan: AudioParam` _readonly_
 
-#### Instance Methods
-  - `connect(destination: AudioNode|AudioParam): void`
-  - `disconnect(): void`
+## Usage
 
-## Example
+At first, call `polyfill()` method.
+
+```js
+require("StereoPannerNode").polyfill();
+```
+
+```html
+<script src="/path/to/stereo-panner-node.js"></script>
+<script>StereoPannerNode.polyfill();</script>
+```
+
+Then, you can use `createStereoPanner()` method at AudioContext.
+
+```js
+var stereoPanner = audioContext.createStereoPanner();
+
+stereoPanner.pan.value = Math.random() * 2 - 1;
+```
+
+
+## Demo
+
 http://mohayonao.github.io/stereo-panner-node/
 
 ## AudioGraph
-```
-+-------------------------------+  +-----------------------+
-| ChannelSplitter(inlet)        |  | BufferSourceNode(dc1) |
-+-------------------------------+  | buffer: [ 1, 1 ]      |
-  |                           |    | loop: true            |
-  |                           |    +-----------------------+
-  |                           |                |
-  |                           |  +---------------+
-  |                           |  | GainNode(pan) |
-  |                           |  | gain: 0       |
-  |                           |  +---------------+
-  |                           |    |
-  |    +----------------------|----+
-  |    |                      |    |
-  |  +---------------------+  |  +---------------------+
-  |  | WaveShaperNode(wsL) |  |  | WaveShaperNode(wsR) |
-  |  | curve: curveL       |  |  | curve: curveR       |
-  |  +---------------------+  |  +---------------------+
-  |                 |         |                 |
-  |                 |         |                 |
-  |                 |         |                 |
-+----------------+  |       +----------------+  |
-| GainNode(outL) |  |       | GainNode(outR) |  |
-| gain: 0      <----+       | gain: 0      <----+
-+----------------+          +----------------+
-  |                           |
-+-------------------------------+
-| ChannelMergerNode(outlet)     |
-+-------------------------------+
-```
+
+![stereo-panner-node](stereo-panner-node.png)
 
 ## License
+
 MIT
