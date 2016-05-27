@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>StereoPannerNode</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="page-header">StereoPannerNode</h1>
+    <div class="form-group">
+      <button id="run" class="btn btn-default">RUN</button>
+    </div>
+  </div>
+  <script src="build/stereo-panner-node.js"></script>
+  <script>
+  window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
+  window.addEventListener("DOMContentLoaded", function() {
+    "use strict";
+
+    var audioContext = new AudioContext();
+    var timerId = 0;
+
+    function beep(t0, iter) {
+      var pos = Math.random() * 2 - 1;
+
+      [].slice.call(new Uint8Array(iter)).forEach(function(_, i) {
+        var t1 = t0 + i * 0.1;
+        var t2 = t1 + 0.05;
+        var oscillator = audioContext.createOscillator();
+        var gain = audioContext.createGain();
+        var pan = new StereoPannerNode(audioContext);
+
+        oscillator.frequency.value = 3520;
+        oscillator.start(t1);
+        oscillator.stop(t2);
+        oscillator.connect(gain);
+
+        gain.gain.value = 0.05;
+        gain.connect(pan);
+
+        pan.pan.value = pos;
+        pan.connect(audioContext.destination);
+      });
+    }
+
+    function drone(t0, dur) {
+      var t1 = t0 + dur * 0.2;
+      var t2 = t1 + dur * 0.8
+      var gain = audioContext.createGain();
+      var pan = new StereoPannerNode(audioContext);
+      var panLFO = audioContext.createOscillator();
+      var root = 0;
+
+      if (Math.random() < 0.25) {
+        root += 7;
+      }
+
+      if (Math.random() < 0.2) {
+        root -= 12;
+      }
+
+      [ 0, 11 ].forEach(function(midi) {
+        var oscillator = audioContext.createOscillator();
+
+        oscillator.frequency.value = 220 * Math.pow(2, (root + midi) / 12);
+        oscillator.start(t0);
+        oscillator.stop(t2);
+        oscillator.connect(gain);
+      });
+
+      gain.gain.setValueAtTime(0.0, t0);
+      gain.gain.linearRampToValueAtTime(0.3, t1);
+      gain.gain.linearRampToValueAtTime(0.0, t2);
+      gain.connect(pan);
+
+      pan.pan.value = 0;
+      pan.connect(audioContext.destination);
+
+      panLFO.frequency.value = Math.random() * 4 + 0.001;
+      panLFO.start(t0);
+      panLFO.stop(t2);
+      panLFO.connect(pan.pan);
+    }
+
+    function compose() {
+      var t0 = audioContext.currentTime;
+
+      if (Math.random() < 0.1) {
+        beep(t0, (Date.now() % 4) + 1);
+      }
+
+      if (Math.random() < 0.1) {
+        drone(t0, ((Date.now() % 6) + 1) * 3);
+      }
+    }
+
+    document.getElementById("run").addEventListener("click", function(e) {
+      if (timerId !== 0) {
+        clearInterval(timerId);
+        timerId = 0;
+        e.target.textContent = "RUN";
+      } else {
+        timerId = setInterval(compose, 125);
+        e.target.textContent = "STOP";
+      }
+    });
+  });
+  </script>
+</body>
+</html>
