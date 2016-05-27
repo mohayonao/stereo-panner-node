@@ -1,4 +1,4 @@
-var assert = require("power-assert");
+var assert = require("assert");
 var StereoPannerNode = require("../lib/stereo-panner-node");
 
 describe("StereoPannerNode", function() {
