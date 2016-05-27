@@ -37,8 +37,9 @@
     "cover": "istanbul cover node_modules/mocha/bin/_mocha",
     "postversion": "git push && git push --tags",
     "prepublish": "npm run test && npm run build",
-    "preversion": "npm run test && npm run build",
+    "preversion": "npm run test",
     "test": "mocha",
-    "travis": "npm run test"
+    "travis": "npm run test",
+    "version": "npm run build && git add -A build"
   }
 }
