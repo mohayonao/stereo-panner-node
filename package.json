@@ -2,7 +2,7 @@
   "name": "stereo-panner-node",
   "description": "StereoPannerNode for legacy Web Audio API",
   "version": "1.0.0",
-  "author": "nao yonamine <mohayonao@gmail.com>",
+  "author": "Nao Yonamine <mohayonao@gmail.com>",
   "bugs": {
     "url": "https://github.com/mohayonao/stereo-panner-node/issues"
   },
@@ -25,7 +25,7 @@
     "webaudioapi"
   ],
   "license": "MIT",
-  "main": "lib/stereo-panner-node.js",
+  "main": "lib/StereoPannerNode.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/mohayonao/stereo-panner-node.git"
