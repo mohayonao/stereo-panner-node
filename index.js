@@ -1,6 +1,6 @@
 /* global Float32Array */
 
-var AudioContext = global.AudioContext || global.webkitAudioContext;
+var BaseAudioContext = require("base-audio-context");
 var AudioNode = global.AudioNode;
 
 var WS_CURVE_SIZE = 4096;
@@ -15,8 +15,8 @@ for (var i = 0; i < WS_CURVE_SIZE; i++) {
 
 function StereoPannerNode(audioContext) {
   var splitter = audioContext.createChannelSplitter(2);
-  var ws1 = audioContext.createWaveShaper();
-  var paramGain = audioContext.createGain();
+  var wsDC = audioContext.createWaveShaper();
+  var pan = audioContext.createGain();
   var wsL = audioContext.createWaveShaper();
   var wsR = audioContext.createWaveShaper();
   var gainL = audioContext.createGain();
@@ -28,20 +28,20 @@ function StereoPannerNode(audioContext) {
   splitter.channelInterpretation = "speakers";
   splitter.connect(gainL, 0);
   splitter.connect(gainR, 1);
-  splitter.connect(ws1, 1);
+  splitter.connect(wsDC, 1);
 
-  ws1.channelCount = 1;
-  ws1.channelCountMode = "explicit";
-  ws1.channelInterpretation = "discrete";
-  ws1.curve = curveDC;
-  ws1.connect(paramGain);
+  wsDC.channelCount = 1;
+  wsDC.channelCountMode = "explicit";
+  wsDC.channelInterpretation = "discrete";
+  wsDC.curve = curveDC;
+  wsDC.connect(pan);
 
-  paramGain.channelCount = 1;
-  paramGain.ChannelMergerNode = "explicit";
-  paramGain.channelInterpretation = "discrete";
-  paramGain.gain.value = 0;
-  paramGain.connect(wsL);
-  paramGain.connect(wsR);
+  pan.channelCount = 1;
+  pan.ChannelMergerNode = "explicit";
+  pan.channelInterpretation = "discrete";
+  pan.gain.value = 0;
+  pan.connect(wsL);
+  pan.connect(wsR);
 
   wsL.channelCount = 1;
   wsL.channelCountMode = "explicit";
@@ -73,7 +73,7 @@ function StereoPannerNode(audioContext) {
 
   Object.defineProperties(splitter, {
     pan: {
-      value: paramGain.gain,
+      value: pan.gain,
       enumerable: true, writable: false, configurable: true
     },
     connect: {
@@ -90,13 +90,13 @@ function StereoPannerNode(audioContext) {
 }
 
 StereoPannerNode.polyfill = function() {
-  if (AudioContext && !AudioContext.prototype.hasOwnProperty("createStereoPanner")) {
+  if (BaseAudioContext && !BaseAudioContext.prototype.hasOwnProperty("createStereoPanner")) {
     StereoPannerNode.install();
   }
 };
 
 StereoPannerNode.install = function() {
-  Object.defineProperty(AudioContext.prototype, "createStereoPanner", {
+  Object.defineProperty(BaseAudioContext.prototype, "createStereoPanner", {
     value: function() {
       return new StereoPannerNode(this);
     },
