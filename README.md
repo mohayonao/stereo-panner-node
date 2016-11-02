@@ -59,7 +59,7 @@ http://mohayonao.github.io/stereo-panner-node/
 
 ## AudioGraph
 
-![stereo-panner-node](stereo-panner-node.png)
+![stereo-panner-node](assets/stereo-panner-node.png)
 
 ## License
 

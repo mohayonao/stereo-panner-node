@@ -1,7 +1,7 @@
 "use strict";
 
 const assert = require("assert");
-const StereoPannerNode = require("../lib/StereoPannerNode");
+const StereoPannerNode = require("..");
 
 describe("StereoPannerNode", () => {
   let audioContext;

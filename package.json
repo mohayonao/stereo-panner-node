@@ -18,7 +18,7 @@
   "files": [
     "package.json",
     "README.md",
-    "lib"
+    "index.js"
   ],
   "homepage": "http://mohayonao.github.io/stereo-panner-node/",
   "keywords": [
@@ -27,16 +27,16 @@
     "webaudio"
   ],
   "license": "MIT",
-  "main": "lib/StereoPannerNode.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/mohayonao/stereo-panner-node.git"
   },
   "scripts": {
     "build": "npm-run-all build:*",
-    "build:browser": "browserify lib/StereoPannerNode.js --standalone StereoPannerNode -o build/stereo-panner-node.js",
-    "build:minify": "browserify lib/StereoPannerNode.js --standalone StereoPannerNode -o build/stereo-panner-node.min.js -t uglifyify",
-    "lint": "eslint lib test",
+    "build:browser": "browserify --standalone StereoPannerNode -o build/stereo-panner-node.js index.js",
+    "build:minify": "browserify --standalone StereoPannerNode -o build/stereo-panner-node.min.js -t uglifyify index.js ",
+    "lint": "eslint index.js test",
     "postversion": "git push && git push --tags",
     "prepublish": "npm-run-all test build",
     "preversion": "npm run test",
