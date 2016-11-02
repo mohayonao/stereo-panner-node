@@ -1,4 +1,7 @@
+/* global Float32Array */
+
 var AudioContext = global.AudioContext || global.webkitAudioContext;
+var AudioNode = global.AudioNode;
 
 var WS_CURVE_SIZE = 4096;
 var curveL = new Float32Array(WS_CURVE_SIZE);
