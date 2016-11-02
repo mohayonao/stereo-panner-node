@@ -39,6 +39,8 @@
   <script src="//mohayonao.github.io/web-audio-scheduler/build/web-audio-scheduler.min.js"></script>
   <script src="build/stereo-panner-node.js"></script>
   <script>
+  StereoPannerNode.polyfill();
+
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
   window.addEventListener("DOMContentLoaded", function() {
@@ -46,8 +48,27 @@
 
     var isPlaying = false;
 
+    function startWebAudioAPI() {
+      if (startWebAudioAPI.done) {
+        return;
+      }
+      var bufSrc = audioContext.createBufferSource();
+
+      bufSrc.buffer = audioContext.createBuffer(1, 128, audioContext.sampleRate);
+      bufSrc.start(audioContext.currentTime);
+      bufSrc.stop(audioContext.currentTime + bufSrc.buffer.duration);
+      bufSrc.onended = function() {
+        bufSrc.disconnect();
+      };
+      bufSrc.connect(audioContext.destination);
+
+      startWebAudioAPI.done = true;
+    }
+
     document.getElementById("button").addEventListener("click", function(e) {
       isPlaying = !isPlaying;
+
+      startWebAudioAPI();
 
       if (isPlaying) {
         sched.start(compose);
@@ -68,6 +89,8 @@
     var audioContext = new AudioContext();
     var sched = new WebAudioScheduler({ context: audioContext });
 
+    window.a = audioContext;
+
     function beep(e) {
       var t0 = e.playbackTime;
       var iter = e.args.iter;
@@ -78,7 +101,7 @@
         var t2 = t1 + 0.05;
         var oscillator = audioContext.createOscillator();
         var gain = audioContext.createGain();
-        var pan = new StereoPannerNode(audioContext);
+        var pan = audioContext.createStereoPanner();
 
         oscillator.frequency.value = 3520;
         oscillator.start(t1);
@@ -99,7 +122,7 @@
       var t1 = t0 + dur * 0.2;
       var t2 = t1 + dur * 0.8
       var gain = audioContext.createGain();
-      var pan = new StereoPannerNode(audioContext);
+      var pan = audioContext.createStereoPanner();
       var panLFO = audioContext.createOscillator();
       var root = 0;
 
