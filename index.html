@@ -39,6 +39,8 @@
   <script src="//mohayonao.github.io/web-audio-scheduler/build/web-audio-scheduler.min.js"></script>
   <script src="build/stereo-panner-node.js"></script>
   <script>
+  StereoPannerNode.polyfill();
+
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
   window.addEventListener("DOMContentLoaded", function() {
@@ -46,11 +48,30 @@
 
     var isPlaying = false;
 
+    function startWebAudioAPI() {
+      if (startWebAudioAPI.done) {
+        return;
+      }
+      var bufSrc = audioContext.createBufferSource();
+
+      bufSrc.buffer = audioContext.createBuffer(1, 128, audioContext.sampleRate);
+      bufSrc.start(audioContext.currentTime);
+      bufSrc.stop(audioContext.currentTime + bufSrc.buffer.duration);
+      bufSrc.onended = function() {
+        bufSrc.disconnect();
+      };
+      bufSrc.connect(audioContext.destination);
+
+      startWebAudioAPI.done = true;
+    }
+
     document.getElementById("button").addEventListener("click", function(e) {
       isPlaying = !isPlaying;
 
+      startWebAudioAPI();
+
       if (isPlaying) {
-        sched.start(compose);
+        sched.start(compose, { counter: 0 });
         e.target.textContent = "Stop";
       } else {
         sched.stop(true);
@@ -67,89 +88,84 @@
   <script id="example">
     var audioContext = new AudioContext();
     var sched = new WebAudioScheduler({ context: audioContext });
+    var chords = [
+      [ 62, 65, 69, 72 ], [ 62, 65, 69, 71 ], [ 60, 64, 67, 71 ], [ 60, 64, 67, 69 ],
+      [ 62, 65, 69, 72 ], [ 62, 65, 69, 71 ], [ 60, 64, 67, 71 ], [ 60, 64, 67, 72 ],
+      [ 62, 65, 69, 72 ], [ 62, 65, 69, 71 ], [ 60, 64, 67, 71 ], [ 60, 64, 67, 69 ],
+      [ 59, 62, 66, 69 ], [ 59, 62, 66, 68 ], [ 57, 62, 64, 69 ], [ 57, 61, 64, 69 ],
+    ];
 
-    function beep(e) {
-      var t0 = e.playbackTime;
-      var iter = e.args.iter;
-      var pos = Math.random() * 2 - 1;
-
-      [].slice.call(new Uint8Array(iter)).forEach(function(_, i) {
-        var t1 = t0 + i * 0.1;
-        var t2 = t1 + 0.05;
-        var oscillator = audioContext.createOscillator();
-        var gain = audioContext.createGain();
-        var pan = new StereoPannerNode(audioContext);
-
-        oscillator.frequency.value = 3520;
-        oscillator.start(t1);
-        oscillator.stop(t2);
-        oscillator.connect(gain);
-
-        gain.gain.value = 0.05;
-        gain.connect(pan);
-
-        pan.pan.value = pos;
-        pan.connect(audioContext.destination);
-      });
-    }
-
-    function drone(e) {
+    function sine(e) {
       var t0 = e.playbackTime;
       var dur = e.args.dur;
-      var t1 = t0 + dur * 0.2;
-      var t2 = t1 + dur * 0.8
+      var chord = e.args.chord;
+      var destination = e.args.destination;
+      var t1 = t0 + dur * 0.01;
+      var t2 = t1 + dur * 0.99;
+      var volume = 0.8 / chord.length;
       var gain = audioContext.createGain();
-      var pan = new StereoPannerNode(audioContext);
-      var panLFO = audioContext.createOscillator();
-      var root = 0;
 
-      if (Math.random() < 0.25) {
-        root += 7;
-      }
-
-      if (Math.random() < 0.2) {
-        root -= 12;
-      }
-
-      [ 0, 11 ].forEach(function(midi) {
+      chord.forEach(function(midi) {
         var oscillator = audioContext.createOscillator();
 
-        oscillator.frequency.value = 220 * Math.pow(2, (root + midi) / 12);
+        oscillator.frequency.value = mtof(midi);
         oscillator.start(t0);
         oscillator.stop(t2);
         oscillator.connect(gain);
       });
 
-      gain.gain.setValueAtTime(0.0, t0);
-      gain.gain.linearRampToValueAtTime(0.1, t1);
-      gain.gain.linearRampToValueAtTime(0.0, t2);
-      gain.connect(pan);
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(volume, t1);
+      gain.gain.linearRampToValueAtTime(0, t2);
+      gain.connect(destination);
+    }
 
-      pan.pan.value = 0;
-      pan.connect(audioContext.destination);
+    function autopan(t0, t3) {
+      var panner = audioContext.createStereoPanner();
+      var panLFO = audioContext.createOscillator();
+      var gain = audioContext.createGain();
+      var t1 = t0 + (t3 - t0) * 0.05;
+      var t2 = t0 + (t3 - t0) * 0.50;
 
-      panLFO.frequency.value = Math.random() * 4 + 0.001;
+      panner.pan.value = 0;
+      panner.connect(gain);
+
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(1, t1);
+      gain.gain.setValueAtTime(1, t2);
+      gain.gain.linearRampToValueAtTime(0, t3);
+      gain.connect(audioContext.destination);
+
+      panLFO.frequency.setValueAtTime(0.1, t0);
+      panLFO.frequency.linearRampToValueAtTime(8, t3);
       panLFO.start(t0);
       panLFO.stop(t2);
-      panLFO.connect(pan.pan);
+      panLFO.connect(panner.pan);
+
+      return panner;
     }
 
     function compose(e) {
       var t0 = e.playbackTime;
+      var counter = e.args.counter;
+      var chord = chords[counter % chords.length];
+      var t1 = t0 + 4;
+      var t2 = t1 + 4;
+      var n = 64;
+      var panner = autopan(t0, t2);
+      var interval = (t2 - t0) / n;
+      var dur = interval * 2;
+      var opts = { chord: chord, dur: dur, destination: panner };
 
-      if (Math.random() < 0.1) {
-        sched.insert(t0, beep, { iter: sample([ 1, 2, 3, 4 ]) });
+      for (var i = 0; i < n; i++) {
+        sched.insert(t0 + interval * i, sine, opts);
       }
 
-      if (Math.random() < 0.1) {
-        sched.insert(t0, drone, { dur: sample([ 2, 4, 8, 12 ]) });
-      }
-
-      sched.insert(t0 + 0.25, compose);
+      sched.insert(t1, compose, { counter: counter + 1 });
     }
 
-    function sample(list) {
-      return list[(Math.random() * list.length)|0];
+    function mtof(midi) {
+      return 440 * Math.pow(2, (midi - 69) / 12);
     }
   </script>
 </body>

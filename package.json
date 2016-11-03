@@ -6,37 +6,42 @@
   "bugs": {
     "url": "https://github.com/mohayonao/stereo-panner-node/issues"
   },
+  "dependencies": {
+    "base-audio-context": "^1.0.3"
+  },
   "devDependencies": {
-    "browserify": "^13.0.1",
-    "istanbul": "^0.4.3",
-    "mocha": "^2.5.3",
-    "uglify-js": "^2.6.2",
+    "browserify": "^13.1.1",
+    "eslint": "^3.9.1",
+    "mocha": "^3.1.2",
+    "npm-run-all": "^3.1.1",
+    "run-with-mocha": "^1.1.0",
+    "uglifyify": "^3.0.4",
     "web-audio-test-api": "^0.5.2"
   },
   "files": [
-    "lib",
     "package.json",
-    "README.md"
+    "README.md",
+    "index.js"
   ],
   "homepage": "http://mohayonao.github.io/stereo-panner-node/",
   "keywords": [
     "polyfill",
     "stereopanner",
-    "webaudioapi"
+    "webaudio"
   ],
   "license": "MIT",
-  "main": "lib/StereoPannerNode.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/mohayonao/stereo-panner-node.git"
   },
   "scripts": {
-    "build": "npm run build-browser && npm run build-minify",
-    "build-browser": "browserify lib/StereoPannerNode.js --standalone StereoPannerNode -o build/stereo-panner-node.js",
-    "build-minify": "uglifyjs build/stereo-panner-node.js -o build/stereo-panner-node.min.js",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha",
+    "build": "npm-run-all build:*",
+    "build:browser": "browserify --standalone StereoPannerNode -o build/stereo-panner-node.js index.js",
+    "build:minify": "browserify --standalone StereoPannerNode -o build/stereo-panner-node.min.js -t uglifyify index.js ",
+    "lint": "eslint index.js test",
     "postversion": "git push && git push --tags",
-    "prepublish": "npm run test && npm run build",
+    "prepublish": "npm-run-all test build",
     "preversion": "npm run test",
     "test": "mocha",
     "travis": "npm run test",
