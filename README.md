@@ -13,25 +13,12 @@ http://webaudio.github.io/web-audio-api/#the-stereopannernode-interface
 npm install stereo-panner-node
 ```
 
-downloads:
+#### downloads:
 
 - [stereo-panner-node.js](https://raw.githubusercontent.com/mohayonao/stereo-panner-node/master/build/stereo-panner-node.js)
 - [stereo-panner-node.min.js](https://raw.githubusercontent.com/mohayonao/stereo-panner-node/master/build/stereo-panner-node.min.js)
 
-## API
-### StereoPannerNode
-  - `constructor(audioContext: AudioContext)`
-
-#### Class Methods
-  - `polyfill(): void`
-    - install `createStereoPanner()` method to `AudioContext.prototype` if needed.
-  - `install(): void`
-    - install `createStereoPanner()` method to `AudioContext.prototype` force
-
-#### Instance Attributes
-  - `pan: AudioParam` _readonly_
-
-## Usage
+## Quick Example
 
 At first, call `polyfill()` method.
 
@@ -52,10 +39,22 @@ var stereoPanner = audioContext.createStereoPanner();
 stereoPanner.pan.value = Math.random() * 2 - 1;
 ```
 
+#### Demo
 
-## Demo
+https://mohayonao.github.io/stereo-panner-node/
 
-http://mohayonao.github.io/stereo-panner-node/
+## API
+### StereoPannerNode
+  - `constructor(audioContext: AudioContext)`
+
+#### Class Methods
+  - `polyfill(): void`
+    - install `createStereoPanner()` method to `AudioContext.prototype` if needed.
+  - `install(): void`
+    - install `createStereoPanner()` method to `AudioContext.prototype` force
+
+#### Instance Attributes
+  - `pan: AudioParam` _readonly_
 
 ## AudioGraph
 
