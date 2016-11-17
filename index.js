@@ -1,7 +1,6 @@
-/* global Float32Array */
+/* global Float32Array, Symbol, AudioNode, AudioParam */
 
 var BaseAudioContext = require("base-audio-context");
-var AudioNode = global.AudioNode;
 
 var WS_CURVE_SIZE = 4096;
 var curveL = new Float32Array(WS_CURVE_SIZE);
@@ -106,5 +105,13 @@ StereoPannerNode.install = function() {
     enumerable: false, writable: false, configurable: true
   });
 };
+
+if (typeof Symbol === "function" && typeof Symbol.hasInstance === "symbol") {
+  Object.defineProperty(StereoPannerNode, Symbol.hasInstance, {
+    value: function(value) {
+      return value instanceof AudioNode && value.pan instanceof AudioParam;
+    }
+  });
+}
 
 module.exports = StereoPannerNode;
