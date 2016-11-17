@@ -13,7 +13,9 @@ for (var i = 0; i < WS_CURVE_SIZE; i++) {
   curveR[i] = Math.sin((i / WS_CURVE_SIZE) * Math.PI * 0.5);
 }
 
-function StereoPannerNode(audioContext) {
+function StereoPannerNode(audioContext, opts) {
+  opts = opts || {};
+
   var splitter = audioContext.createChannelSplitter(2);
   var wsDC = audioContext.createWaveShaper();
   var pan = audioContext.createGain();
@@ -22,6 +24,7 @@ function StereoPannerNode(audioContext) {
   var gainL = audioContext.createGain();
   var gainR = audioContext.createGain();
   var merger = audioContext.createChannelMerger(2);
+  var panValue = typeof opts.offset === "number" ? opts.pan : 1;
 
   splitter.channelCount = 2;
   splitter.channelCountMode = "explicit";
@@ -39,7 +42,7 @@ function StereoPannerNode(audioContext) {
   pan.channelCount = 1;
   pan.ChannelMergerNode = "explicit";
   pan.channelInterpretation = "discrete";
-  pan.gain.value = 0;
+  pan.gain.value = panValue;
   pan.connect(wsL);
   pan.connect(wsR);
 
