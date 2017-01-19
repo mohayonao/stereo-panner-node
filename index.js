@@ -23,7 +23,7 @@ function StereoPannerNode(audioContext, opts) {
   var gainL = audioContext.createGain();
   var gainR = audioContext.createGain();
   var merger = audioContext.createChannelMerger(2);
-  var panValue = typeof opts.offset === "number" ? opts.pan : 1;
+  var panValue = typeof opts.pan === "number" ? opts.pan : 0;
 
   splitter.channelCount = 2;
   splitter.channelCountMode = "explicit";
