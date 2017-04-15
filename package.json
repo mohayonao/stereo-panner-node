@@ -7,7 +7,7 @@
     "url": "https://github.com/mohayonao/stereo-panner-node/issues"
   },
   "dependencies": {
-    "base-audio-context": "^1.1.0"
+    "base-audio-context": "^1.1.1"
   },
   "devDependencies": {
     "browserify": "^13.1.1",
