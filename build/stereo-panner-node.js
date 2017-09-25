@@ -6,6 +6,7 @@ var BaseAudioContext = require("base-audio-context");
 var WS_CURVE_SIZE = 4096;
 var curveL = new Float32Array(WS_CURVE_SIZE);
 var curveR = new Float32Array(WS_CURVE_SIZE);
+var curveFix = new Float32Array([ 0, 0 ]);
 var curveDC = new Float32Array([ 1, 1 ]);
 
 for (var i = 0; i < WS_CURVE_SIZE; i++) {
@@ -18,6 +19,7 @@ function StereoPannerNode(audioContext, opts) {
 
   var splitter = audioContext.createChannelSplitter(2);
   var wsDC = audioContext.createWaveShaper();
+  var wsFix = audioContext.createWaveShaper();
   var pan = audioContext.createGain();
   var wsL = audioContext.createWaveShaper();
   var wsR = audioContext.createWaveShaper();
@@ -32,12 +34,21 @@ function StereoPannerNode(audioContext, opts) {
   splitter.connect(gainL, 0);
   splitter.connect(gainR, 1);
   splitter.connect(wsDC, 1);
+  splitter.connect(wsFix, 1);
 
   wsDC.channelCount = 1;
   wsDC.channelCountMode = "explicit";
   wsDC.channelInterpretation = "discrete";
   wsDC.curve = curveDC;
   wsDC.connect(pan);
+
+  // GainNode mute sound when gain value is 0.
+  // This node avoid to mute of GainNode for pan attribute. (#13)
+  wsFix.channelCount = 1;
+  wsFix.channelCountMode = "explicit";
+  wsFix.channelInterpretation = "discrete";
+  wsFix.curve = curveFix;
+  wsFix.connect(pan.gain);
 
   pan.channelCount = 1;
   pan.ChannelMergerNode = "explicit";
