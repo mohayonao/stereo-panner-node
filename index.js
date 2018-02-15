@@ -50,7 +50,7 @@ function StereoPannerNode(audioContext, opts) {
   wsFix.connect(pan.gain);
 
   pan.channelCount = 1;
-  pan.ChannelMergerNode = "explicit";
+  pan.channelCountMode = "explicit";
   pan.channelInterpretation = "discrete";
   pan.gain.value = panValue;
   pan.connect(wsL);
