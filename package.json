@@ -10,12 +10,12 @@
     "base-audio-context": "^1.1.1"
   },
   "devDependencies": {
-    "browserify": "^14.4.0",
-    "eslint": "^4.7.2",
-    "mocha": "^3.1.2",
-    "npm-run-all": "^4.1.1",
+    "browserify": "^16.1.0",
+    "eslint": "^4.17.0",
+    "mocha": "^5.0.1",
+    "npm-run-all": "^4.1.2",
     "run-with-mocha": "^1.1.0",
-    "uglifyify": "^4.0.4",
+    "uglifyify": "^4.0.5",
     "web-audio-test-api": "^0.5.2"
   },
   "files": [
