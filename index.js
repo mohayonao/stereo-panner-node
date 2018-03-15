@@ -103,7 +103,7 @@ function StereoPannerNode(audioContext, opts) {
 }
 
 StereoPannerNode.polyfill = function() {
-  if (BaseAudioContext && !BaseAudioContext.prototype.hasOwnProperty("createStereoPanner")) {
+  if (BaseAudioContext && !("createStereoPanner" in BaseAudioContext.prototype)) {
     StereoPannerNode.install();
   }
 };
